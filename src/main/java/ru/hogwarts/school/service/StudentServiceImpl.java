@@ -3,45 +3,43 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    Map<Long, Student> students = new HashMap<>();
-    long studentId = 1L;
+    private Map<Long, Student> students = new HashMap<>();
+    private long studentId = 1L;
     @Override
     public Student addStudent(Student student) {
+        student.setId(studentId);
         students.put(studentId,student);
         studentId++;
         return student;
     }
     @Override
     public Student getStudent(long id) {
-        Student findStudent = students.get(id);
-        return findStudent;
+        return students.get(id);
     }
     @Override
-    public Student updateStudent(long id, Student student) {
-        students.put(id, student);
+    public Student updateStudent(Student student) {
+        if (!students.containsKey(student.getId())){
+            return null;
+        }
+        students.put(student.getId(), student);
         return student;
     }
 
     @Override
     public Student removeStudent(long id) {
-        if (students.containsValue(id)){
-            Student removeStudent = students.get(id);
-            students.remove(id);
-            return removeStudent;
-        } else throw new RuntimeException("Данный студент не числится в школе");
+        return students.remove(id);
     }
 
     @Override
-    public Map<Integer, List<Student>> studentsByAge(int age) {
+    public Collection<Student> studentsByAge(int age) {
         return students.values()
                 .stream()
-                .collect(Collectors.groupingBy(Student::getAge));
+                .filter(student -> student.getAge()==age).toList();
     }
 }

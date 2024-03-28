@@ -1,15 +1,17 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("student")
+@RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
 
@@ -17,9 +19,8 @@ public class StudentController {
         this.studentService = studentService;
     }
     @PostMapping
-    public ResponseEntity<Student> createStudent (@RequestBody Student student){
-        Student createdStudent = studentService.addStudent(student);
-        return ResponseEntity.ok(createdStudent);
+    public Student createStudent (@RequestBody Student student){
+        return studentService.addStudent(student);
     }
     @GetMapping("{studentId}")
     public ResponseEntity<Student> getStudentById (@PathVariable long studentId){
@@ -29,21 +30,20 @@ public class StudentController {
         }
         return ResponseEntity.ok(student);
     }
-    @PutMapping
+    @PutMapping("{id}")
     public ResponseEntity<Student> updateStudent (@RequestBody Student student){
-        Student updatedStudent = studentService.updateStudent(student.getId(),student);
+        Student updatedStudent = studentService.updateStudent(student);
         if (updatedStudent == null){
-            ResponseEntity.notFound().build();
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(updatedStudent);
     }
     @DeleteMapping("{studentId}")
     public ResponseEntity<Student> deleteStudent (@PathVariable long studentId){
-        Student deletedStudent = studentService.removeStudent(studentId);
-        return ResponseEntity.ok(deletedStudent);
+        return ResponseEntity.ok(studentService.removeStudent(studentId));
     }
     @GetMapping("get/{age}")
-    public ResponseEntity<Map<Integer, List<Student>>> getStudentsByAge (@PathVariable int age){
+    public ResponseEntity<Collection<Student>> getStudentsByAge (@PathVariable int age){
         return ResponseEntity.ok(studentService.studentsByAge(age));
     }
 }

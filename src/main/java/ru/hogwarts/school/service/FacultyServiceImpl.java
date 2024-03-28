@@ -3,18 +3,18 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
-    Map<Long, Faculty> faculties = new HashMap<>();
-    long facultyId = 1L;
+    private Map<Long, Faculty> faculties = new HashMap<>();
+    private long facultyId = 1L;
 
     @Override
     public Faculty addFaculty(Faculty faculty) {
+        faculty.setId(facultyId);
         faculties.put(facultyId, faculty);
         facultyId++;
         return faculty;
@@ -22,29 +22,28 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty getFaculty(long id) {
-        Faculty faculty = faculties.get(id);
-        return faculty;
+        return faculties.get(id);
     }
 
     @Override
-    public Faculty updateFaculty(long id, Faculty faculty) {
-        faculties.put(id, faculty);
+    public Faculty updateFaculty(Faculty faculty) {
+        if (!faculties.containsKey(faculty.getId())){
+            return null;
+        }
+            faculties.put(faculty.getId(),faculty);
         return faculty;
     }
 
     @Override
     public Faculty removeFaculty(long id) {
-        if (faculties.containsKey(id)) {
-            Faculty removeFaculty = faculties.get(id);
-            faculties.remove(id);
-            return removeFaculty;
-        } else throw new RuntimeException("Факультет не может быть удален, так как его не существует");
+            return faculties.remove(id);
     }
 
     @Override
-    public Map<String, List<Faculty>> getFacultyByColor(String color) {
+    public Collection<Faculty> getFacultyByColor(String color) {
         return faculties.values()
                 .stream()
-                .collect(Collectors.groupingBy(Faculty::getColor));
+                .filter(faculty -> faculty.getColor().equals(color))
+                .toList();
     }
 }
