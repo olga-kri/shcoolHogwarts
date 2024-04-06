@@ -24,19 +24,21 @@ public class StudentController {
         return new ResponseEntity<>(student,HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
-    public Student getStudentById (@PathVariable long id){
+    public Student getStudentById (@PathVariable Long id){
         return studentService.getStudent(id);
     }
     @PutMapping("/{id}")
-    public Student updateStudent (@RequestBody Student student, @PathVariable long id){
+    public Student updateStudent (@RequestBody Student student, @PathVariable Long id){
         return studentService.updateStudent(student, id);
     }
     @DeleteMapping("/{id}")
-    public void deleteStudent (@PathVariable long id){
+    public void deleteStudent (@PathVariable Long id){
+
         studentService.removeStudent(id);
     }
-    @GetMapping("/filter/{age}")
-    public List<Student> getStudentsByAge (@PathVariable int age){
+    @GetMapping("/filter")
+    public List<Student> getStudentsByAge (@RequestParam Integer age){
+
         return studentService.studentsByAge(age);
     }
 }

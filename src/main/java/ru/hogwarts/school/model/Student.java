@@ -13,7 +13,7 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int age;
+    private Integer age;
 
     public Student(){
 

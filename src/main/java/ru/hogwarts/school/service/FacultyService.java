@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface FacultyService {
     Faculty addFaculty(Faculty faculty);
-    Faculty getFaculty(long id);
+    Faculty getFaculty(Long id);
     Faculty updateFaculty(Faculty faculty, Long id);
-    void removeFaculty(long id);
+    void removeFaculty(Long id);
 
     List<Faculty> getFacultyByColor(String color);
 }

@@ -14,6 +14,7 @@ public class FacultyServiceImpl implements FacultyService {
     private final FacultyRepository facultyRepository;
 
     public FacultyServiceImpl(FacultyRepository facultyRepository) {
+
         this.facultyRepository = facultyRepository;
     }
 
@@ -23,7 +24,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty getFaculty(long id) {
+    public Faculty getFaculty(Long id) {
         return facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
     }
 
@@ -34,12 +35,13 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public void  removeFaculty(long id) {
+    public void  removeFaculty(Long id) {
             facultyRepository.deleteById(id);
     }
 
     @Override
     public List<Faculty> getFacultyByColor(String color) {
+
         return facultyRepository.findAllByColor(color);
     }
 }

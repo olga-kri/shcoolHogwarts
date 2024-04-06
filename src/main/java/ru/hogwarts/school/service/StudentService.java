@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface StudentService {
     Student addStudent(Student student);
-    Student getStudent(long id);
-    Student updateStudent(Student student, long id);
-    void removeStudent(long id);
+    Student getStudent(Long id);
+    Student updateStudent(Student student, Long id);
+    void removeStudent(Long id);
 
-    List<Student> studentsByAge(int age);
+    List<Student> studentsByAge(Integer age);
 }
