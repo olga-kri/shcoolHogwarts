@@ -18,33 +18,25 @@ public class FacultyController  {
         this.facultyService = facultyService;
     }
     @PostMapping
-    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty){
-        Faculty newFaculty = facultyService.addFaculty(faculty);
-        return ResponseEntity.ok(newFaculty);
+    public Faculty createFaculty(@RequestBody Faculty faculty){
+        return facultyService.addFaculty(faculty);
     }
-    @GetMapping("{facultyID}")
-    public ResponseEntity<Faculty> getFacultyById (@PathVariable long facultyID){
-        Faculty faculty = facultyService.getFaculty(facultyID);
-        if (faculty==null){
-            return ResponseEntity.notFound().build();
-        } else return ResponseEntity.ok(faculty);
+    @GetMapping("/{id}")
+    public Faculty getFacultyById (@PathVariable long id){
+        return facultyService.getFaculty(id);
+
     }
-    @PutMapping()
-    public ResponseEntity <Faculty> updateFaculty (@RequestBody Faculty faculty){
-        Faculty updateFaculty = facultyService.updateFaculty(faculty);
-        if (updateFaculty==null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updateFaculty);
+    @PutMapping("/{id}")
+    public Faculty updateFaculty (@RequestBody Faculty faculty, @PathVariable Long id){
+        return facultyService.updateFaculty(faculty,id);
     }
     @DeleteMapping("{facultyId}")
-    public ResponseEntity<Faculty> deleteFaculty (@PathVariable long facultyId){
-        Faculty deletedFaculty = facultyService.removeFaculty(facultyId);
-        return ResponseEntity.ok(deletedFaculty);
+    public void deleteFaculty (@RequestParam long facultyId){
+          facultyService.removeFaculty(facultyId);
     }
-    @GetMapping("get/{color}")
-    public ResponseEntity<Collection<Faculty>> getAllFacultyByColor (@PathVariable String color){
-        return ResponseEntity.ok(facultyService.getFacultyByColor(color));
+    @GetMapping("/filter/{color}")
+    public List<Faculty>getAllFacultyByColor (@PathVariable String color){
+        return facultyService.getFacultyByColor(color);
     }
 
 }

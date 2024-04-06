@@ -1,49 +1,45 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
-    private Map<Long, Faculty> faculties = new HashMap<>();
-    private long facultyId = 1L;
+
+    private final FacultyRepository facultyRepository;
+
+    public FacultyServiceImpl(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     @Override
     public Faculty addFaculty(Faculty faculty) {
-        faculty.setId(facultyId);
-        faculties.put(facultyId, faculty);
-        facultyId++;
-        return faculty;
+       return facultyRepository.save(faculty);
     }
 
     @Override
     public Faculty getFaculty(long id) {
-        return faculties.get(id);
+        return facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
     }
 
     @Override
-    public Faculty updateFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())){
-            return null;
-        }
-            faculties.put(faculty.getId(),faculty);
-        return faculty;
+    public Faculty updateFaculty(Faculty faculty, Long id) {
+        facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
+        return facultyRepository.save(faculty);
     }
 
     @Override
-    public Faculty removeFaculty(long id) {
-            return faculties.remove(id);
+    public void  removeFaculty(long id) {
+            facultyRepository.deleteById(id);
     }
 
     @Override
-    public Collection<Faculty> getFacultyByColor(String color) {
-        return faculties.values()
-                .stream()
-                .filter(faculty -> faculty.getColor().equals(color))
-                .toList();
+    public List<Faculty> getFacultyByColor(String color) {
+        return facultyRepository.findAllByColor(color);
     }
 }
