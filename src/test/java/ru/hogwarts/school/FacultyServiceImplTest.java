@@ -18,22 +18,21 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
+import static ru.hogwarts.school.Data.*;
 
 @ExtendWith(MockitoExtension.class)
 public class FacultyServiceImplTest {
     @Mock
     FacultyRepository repositoryMock;
+
+
     private FacultyServiceImpl out;
+
     @BeforeEach
     public void initOut(){
         out = new FacultyServiceImpl(repositoryMock);
     }
-    Faculty faculty1 = new Faculty(1L, "Гриффиндор", "красный");
-    Faculty faculty2 = new Faculty(2L, "Ппуфедуй", "красный");
-    Faculty faculty3 = new Faculty(3L, "Слизерин", "зеленый");
-    Faculty updateFaculty = new Faculty(1L, "Гриффиндор", "золотой");
 
-    List<Faculty> facultyWithSameColor = new ArrayList<>(List.of(faculty1, faculty2));
 
     @Test
     void addFacultyAfterSave() {
@@ -63,8 +62,19 @@ public class FacultyServiceImplTest {
         Assertions.assertThrows(FacultyNotFoundException.class,()-> out.updateFaculty(new Faculty(5L, "Когтевран", "синий"),  5L));
     }
     @Test
-    public void findFacultiesWithTheSameColor(){
-        when(repositoryMock.findAllByColor("красный")).thenReturn(facultyWithSameColor);
-        Assertions.assertEquals(facultyWithSameColor, out.getFacultyByColor("красный"));
+    public void findFacultiesByColor(){
+        when(repositoryMock.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(null,"красный")).thenReturn(facultyWithSameColor);
+        Assertions.assertEquals(facultyWithSameColor, out.findFacultyByNameOrColor(null,"красный"));
     }
+    @Test
+    public void findFacultieByName(){
+        when(repositoryMock.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase("Гриффиндор",null)).thenReturn(facultyWithSameName);
+        Assertions.assertEquals(facultyWithSameName, out.findFacultyByNameOrColor("Гриффиндор",null));
+    }
+   // @Test
+   // public void findStudentsOnFaculty(){
+   //     when(repositoryMock.findById(1L)).thenReturn(Optional.ofNullable(faculty1));
+   //     Assertions.assertEquals(faculty1, out.getFaculty(1L));
+   //     Assertions.assertEquals(studentsOnFaculty, faculty1.getStudents ());
+   // }
 }

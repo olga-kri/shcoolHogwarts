@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static ru.hogwarts.school.Data.*;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentServiseImplTest {
@@ -23,13 +24,7 @@ public class StudentServiseImplTest {
     @InjectMocks
     private StudentServiceImpl out;
 
-    Student student1 = new Student(1L, "Harry Potter", 7);
-    Student student2 = new Student(2L, "Hermiona Greindger", 7);
-    Student student3 = new Student(3L, "Fred Uizly", 9);
-    Student updateStudent = new Student(1L, "Harry Potter", 8);
 
-    List<Student> students = new ArrayList<>(List.of(student1, student2, student3));
-    List<Student> studentWithSameAge = new ArrayList<>(List.of(student1, student2));
     @Test
     void addStudentAfterSave() {
         when(repositoryMock.save(new Student(1L, "Harry Potter", 7))).thenReturn(student1);
@@ -61,5 +56,11 @@ public class StudentServiseImplTest {
     public void findStudentsWithTheSameAge(){
         when(repositoryMock.findAllByAge(7)).thenReturn(studentWithSameAge);
         Assertions.assertEquals(studentWithSameAge, out.studentsByAge(7));
+    }
+    @Test
+    public void findStudentsWithAgeBetween(){
+        when(repositoryMock.findByAgeBetween(6,8)).thenReturn(studentWithSameAge);
+        Assertions.assertEquals(studentWithSameAge, out.findStudentByAgeBetweenMinAgeAndMaxAge(6,8));
+
     }
 }
