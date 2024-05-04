@@ -41,7 +41,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> studentsByAge(Integer age) {
-
         return studentRepository.findAllByAge(age);
     }
 

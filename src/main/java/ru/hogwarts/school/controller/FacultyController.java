@@ -35,16 +35,15 @@ public class FacultyController  {
         return facultyService.updateFaculty(faculty,id);
     }
 
-    @DeleteMapping("/{facultyId}")
-    public void deleteFaculty (@RequestParam Long facultyId){
-
-        facultyService.removeFaculty(facultyId);
+    @DeleteMapping
+    public void deleteFaculty (@RequestParam Long id){
+        facultyService.removeFaculty(id);
     }
 
     @GetMapping("/find")
-    public List<Faculty> findFacultyByNameOrColor(@RequestParam (required = false)String facultyName,
-                                                  @RequestParam (required = false)String facultyColor){
-        return facultyService.findFacultyByNameOrColor(facultyName,facultyColor);
+    public List<Faculty> findFacultyByNameOrColor(@RequestParam (required = false)String name,
+                                                  @RequestParam (required = false)String color){
+        return facultyService.findFacultyByNameOrColor(name,color);
     }
 
     @GetMapping("/students")

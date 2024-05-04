@@ -2,8 +2,6 @@ package ru.hogwarts.school.model;
 
 import jakarta.persistence.*;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-
 import java.util.Objects;
 @Entity
 public class Student {
@@ -21,9 +19,9 @@ public class Student {
 
     }
 
-    public Student(Long id, String name, int age) {
+   public Student(Long id, String name, int age) {
         this.id = id;
-        this.name = name;
+       this.name = name;
         this.age = age;
     }
 

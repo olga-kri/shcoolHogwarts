@@ -71,10 +71,5 @@ public class FacultyServiceImplTest {
         when(repositoryMock.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase("Гриффиндор",null)).thenReturn(facultyWithSameName);
         Assertions.assertEquals(facultyWithSameName, out.findFacultyByNameOrColor("Гриффиндор",null));
     }
-   // @Test
-   // public void findStudentsOnFaculty(){
-   //     when(repositoryMock.findById(1L)).thenReturn(Optional.ofNullable(faculty1));
-   //     Assertions.assertEquals(faculty1, out.getFaculty(1L));
-   //     Assertions.assertEquals(studentsOnFaculty, faculty1.getStudents ());
-   // }
+
 }
