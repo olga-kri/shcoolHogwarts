@@ -18,6 +18,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -121,23 +122,23 @@ public class StudentControllerRestTemplateTest {
 
     }
 
-    @Test //Здесь NullPointerException в 143 строке, если раскомментировать studentRepositoryб то статус 500
+    @Test
     public void getFacultyTest() throws Exception {
-
-        Faculty faculty = new Faculty(null,"Griffindor","green");
-        facultyRepository.save(faculty);
-        Long facultyId = facultyRepository.save(faculty).getId();
-        Faculty actualFaculty = new Faculty(facultyId,"Griffindor","green");
-        actualFaculty.setStudents(studentsInDatabase);
-        facultyRepository.save(actualFaculty);
-
-        Long studentId = studentsInDatabase.get(0).getId();
-        Student student =studentsInDatabase.get(0);
-        student.setFaculty(actualFaculty);
-        //studentRepository.save(student);
+        studentRepository.deleteAll();
+        facultyRepository.deleteAll();
+        Faculty faculty = new Faculty(null, "Griffindor", "red");
+        Faculty savedFaculty = facultyRepository.save(faculty);
+        Student student1 = new Student(null, "Harry Potter", 8);
+        Student student2 = new Student(null, "Ron Uizly", 8);
+        student1.setFaculty(savedFaculty);
+        student2.setFaculty(savedFaculty);
+        List<Student> students = List.of(student1,student2);
+        List<Student> savedStudent = studentRepository.saveAll(students);
+        Long studentId = savedStudent.get(0).getId();
 
         ResponseEntity<String> response = restTemplate
-                .getForEntity("http://localhost:" +port+ "/student/faculty?id="+studentId, String.class );
+                .exchange("http://localhost:" +port+ "/student/faculty/"+studentId, HttpMethod.GET,
+                        null, String.class );
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getHeaders().getContentType().equals(MediaType.APPLICATION_JSON));

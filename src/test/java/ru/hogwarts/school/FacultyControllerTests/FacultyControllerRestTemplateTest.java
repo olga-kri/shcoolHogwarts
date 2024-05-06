@@ -46,6 +46,7 @@ public class FacultyControllerRestTemplateTest {
 
     @BeforeEach
     void setUp() {
+        studentRepository.deleteAll();
         facultyRepository.deleteAll();
         Faculty faculty = new Faculty(1L, "Griffindor", "red");
         Faculty faculty2 = new Faculty(2L, "Slitherin", "green");
@@ -113,18 +114,20 @@ public class FacultyControllerRestTemplateTest {
         Assertions.assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(response.getBody()).contains("red");
     }
-    @Test                        // Ошибка в 133 строке - возвращает пустой список
+    @Test
     public void getStudentsByFacultyTest() throws Exception {
-        Long id = facultyInDatabase.get(0).getId();
-        Faculty faculty = facultyInDatabase.get(0);
         studentRepository.deleteAll();
-        List<Student> students = List.of(new Student(null, "Harry Potter", 8),new Student(null, "Ron Uizly", 8));
-        List<Student> studentsInDatabase = studentRepository.saveAll(students);
-        faculty.setStudents(studentsInDatabase);
-        facultyRepository.save(faculty);
+        Long id = facultyInDatabase.get(0).getId();
+        Student student1 = new Student(null, "Harry Potter", 8);
+        Student student2 = new Student(null, "Ron Uizly", 8);
+        Faculty savedFaculty = facultyInDatabase.get(0);
+        student1.setFaculty(savedFaculty);
+        student2.setFaculty(savedFaculty);
+        List<Student> students = List.of(student1,student2);
+        List <Student> studentsInDatabase = studentRepository.saveAll(students);
 
         ResponseEntity<List<Student>> response = restTemplate
-                        .exchange("http://localhost:" +port+ "/faculty/students?facultyId="+ id,
+                        .exchange("http://localhost:" +port+ "/faculty/students?id="+ id,
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<Student>>() {} );

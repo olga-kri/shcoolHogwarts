@@ -37,6 +37,7 @@ public class FacultyController  {
 
     @DeleteMapping
     public void deleteFaculty (@RequestParam Long id){
+
         facultyService.removeFaculty(id);
     }
 
@@ -47,8 +48,8 @@ public class FacultyController  {
     }
 
     @GetMapping("/students")
-    public Collection <Student>getStudentsByFacultyId (@RequestParam Long facultyId){
-        return facultyService.getStudentsOnFaculty(facultyId);
+    public Collection <Student>getStudentsByFacultyId (@RequestParam Long id){
+        return facultyService.getStudentsOnFaculty(id);
     }
 
 
