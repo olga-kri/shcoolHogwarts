@@ -56,4 +56,18 @@ public class StudentController {
     public Faculty getFacultyForStudent (@PathVariable Long id){
         return studentService.findFacultyForStudent(id);
     }
+
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countOfStudents(){
+       return ResponseEntity.ok(studentService.findCountOfStudent());
+    }
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> averageAgeOfStudents(){
+        return ResponseEntity.ok(studentService.findAveragAge());
+    }
+    @GetMapping ("/last-five")
+    public ResponseEntity<List<Student>> lastFiveStudents(){
+        return ResponseEntity.ok(studentService.findLastFiveStudents());
+    }
 }
