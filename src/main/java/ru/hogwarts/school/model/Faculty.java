@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
