@@ -25,4 +25,8 @@ public interface StudentService {
     List<String> getStudentsWithNameStartingWithA();
 
     Double getAverageAgeOfStudentsWithStreams();
+
+    void printParallel() throws InterruptedException;
+
+    void printSynchronized() throws InterruptedException;
 }
