@@ -1,0 +1,163 @@
+package ru.hogwarts.school.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
+import ru.hogwarts.school.exception.StudentDontFoundException;
+import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
+
+import java.util.*;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+    private final StudentRepository studentRepository;
+
+    public StudentServiceImpl(StudentRepository studentRepository) {
+
+        this.studentRepository = studentRepository;
+    }
+
+    Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+
+    @Override
+    public Student addStudent(Student student) {
+        logger.info("Was invoked method - addStudent");
+        return studentRepository.save(student);
+    }
+
+    @Override
+    public Student getStudent(Long id) {
+        logger.info("Was invoked method - getStudent");
+        Optional<Student> studentById = studentRepository.findById(id);
+        if (studentById.isEmpty()) {
+            logger.error("Student by id={} not found",id);
+            throw new StudentDontFoundException("Student not found");
+        }
+        logger.debug("Student by id={} was founded",id);
+        return studentById.get();
+    }
+    @Override
+    public Student updateStudent(Student student, Long id) {
+        logger.info("Was invoked method - updateStudent");
+        Optional<Student> studentById = studentRepository.findById(id);
+        if (studentById.isEmpty()) {
+            logger.error("Student by id={} not found",id);
+            throw new StudentDontFoundException("Student not found");
+        }
+        logger.debug("In method updateStudent find student:{}, by studentId:{}", student, id);
+        return studentRepository.save(student);
+    }
+    @Override
+    public void removeStudent(Long id) {
+        logger.info("Was invoked method - removeStudent");
+        studentRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Student> studentsByAge(Integer age) {
+        logger.info("Was invoked method - studentsByAge");
+        return studentRepository.findAllByAge(age);
+    }
+
+    @Override
+    public List<Student> findStudentByAgeBetweenMinAgeAndMaxAge(Integer minAge, Integer maxAge) {
+        logger.info("Was invoked method - findStudentByAgeBetweenMinAgeAndMaxAge");
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    @Override
+    public Faculty findFacultyForStudent(Long id) {
+        logger.info("Was invoked method - findFacultyForStudent");
+        Optional<Student> studentById = studentRepository.findById(id);
+        if (studentById.isEmpty()) {
+            logger.error("Student by id={} not found",id);
+            throw new StudentDontFoundException("Student not found");
+        }
+        logger.debug("In method findFacultyForStudent find student:{}, by studentId:{}", studentById, id);
+        return studentById.get().getFaculty();
+    }
+
+    @Override
+    public Integer findCountOfStudent() {
+        logger.info("Was invoked method - findCountOfStudent");
+        return studentRepository.countOfStudents();
+    }
+
+    @Override
+    public Double findAveragAge() {
+        logger.info("Was invoked method - findAveragAge");
+        return studentRepository.findAverageAge();
+    }
+
+    @Override
+    public List<Student> findLastFiveStudents() {
+        logger.info("Was invoked method - findLastFiveStudents");
+        return studentRepository.findLastFive();
+    }
+
+    @Override
+    public List<String> getStudentsWithNameStartingWithA() {
+        logger.info("Was invoked method - getStudentsWithNameStartingWithA");
+        return studentRepository.findAll()
+                .stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(a -> a.startsWith("A"))
+                .sorted()
+                .toList();
+    }
+
+    @Override
+    public Double getAverageAgeOfStudentsWithStreams() {
+        logger.info("Was invoked method - getAverageAgeOfStudentsWithStreams");
+        return studentRepository.findAll()
+                .stream()
+                .mapToDouble(Student::getAge)
+                .average()
+                .orElseThrow();
+    }
+
+    @Override
+    public void printParallel() {
+        List<Student> students = studentRepository.findAll();
+
+        System.out.println(students.get(0).getName());
+        System.out.println(students.get(1).getName());
+
+        new Thread(()->{
+            System.out.println(students.get(2).getName());
+            System.out.println(students.get(3).getName());
+        }).start();
+
+        new Thread(()->{
+            System.out.println(students.get(4).getName());
+            System.out.println(students.get(5).getName());
+        }).start();
+    }
+
+    @Override
+    public void printSynchronized() {
+        printSynch(0);
+        printSynch(1);
+
+        new Thread(()->{
+            printSynch(2);
+            printSynch(3);
+        }).start();
+
+        new Thread(()->{
+            printSynch(4);
+            printSynch(5);
+        }).start();
+
+    }
+
+    public synchronized void printSynch(int i){
+        List<Student> students = studentRepository.findAll();
+        System.out.println(students.get(i).getName());
+}
+
+}
